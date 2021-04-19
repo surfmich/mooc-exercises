@@ -94,10 +94,10 @@ class BraitenbergAgent:
         #ls = rescale(l, self.l_min, self.l_max)
         #rs = rescale(r, self.r_min, self.r_max)
 
-        gain = self.config.gain
-        const = self.config.const
-        pwm_left = min(const + self.l * gain, 1.0)
-        pwm_right = min(const + self.r * gain, 1.0)
+        gain = 0.0001*1.0/38400  #self.config.gain
+        const = 0.2  #self.config.const
+        pwm_left = min(const + l * gain, 1.0)
+        pwm_right = min(const + r * gain, 1.0)
         
         if 0:#(l <= 0.001) or (r <= 0.001):
             temp = pwm_left
