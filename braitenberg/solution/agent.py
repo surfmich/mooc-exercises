@@ -26,8 +26,8 @@ from preprocessing import preprocess
 
 @dataclass
 class BraitenbergAgentConfig:
-    gain: float = 0.1
-    const: float = 0.1
+    gain: float = 10.0
+    const: float = 0.05
 
 
 class BraitenbergAgent:
@@ -85,19 +85,24 @@ class BraitenbergAgent:
         # We normalize them using the history
 
         # first, we remember the high/low of these raw signals
-        self.l_max = max(l, self.l_max)
-        self.r_max = max(r, self.r_max)
-        self.l_min = min(l, self.l_min)
-        self.r_min = min(r, self.r_min)
+        #self.l_max = max(l, self.l_max)
+        #self.r_max = max(r, self.r_max)
+        #self.l_min = min(l, self.l_min)
+        #self.r_min = min(r, self.r_min)
 
         # now rescale from 0 to 1
-        ls = rescale(l, self.l_min, self.l_max)
-        rs = rescale(r, self.r_min, self.r_max)
+        #ls = rescale(l, self.l_min, self.l_max)
+        #rs = rescale(r, self.r_min, self.r_max)
 
         gain = self.config.gain
         const = self.config.const
-        pwm_left = const + ls * gain
-        pwm_right = const + rs * gain
+        pwm_left = min(const + self.l * gain, 1.0)
+        pwm_right = min(const + self.r * gain, 1.0)
+        
+        if 0:#(l <= 0.001) or (r <= 0.001):
+            temp = pwm_left
+            pwm_left = pwm_right
+            pwm_right = temp
 
         return pwm_left, pwm_right
 
