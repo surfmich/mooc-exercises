@@ -40,6 +40,7 @@ class BraitenbergAgent:
     r_max: float
     l_min: float
     r_min: float
+    lost: bool
 
     def init(self, context: Context):
         context.info("init()")
@@ -50,6 +51,7 @@ class BraitenbergAgent:
         self.r_min = math.inf
         self.left = None
         self.right = None
+        self.lost = False;
 
     def on_received_seed(self, data: int):
         np.random.seed(data)
@@ -94,15 +96,21 @@ class BraitenbergAgent:
         #ls = rescale(l, self.l_min, self.l_max)
         #rs = rescale(r, self.r_min, self.r_max)
 
-        gain = 0.0001*1.0/38400  #self.config.gain
+        gain = 0.001*1.0/38400  #self.config.gain
         const = 0.2  #self.config.const
         pwm_left = min(const + l * gain, 1.0)
         pwm_right = min(const + r * gain, 1.0)
         
-        if 0:#(l <= 0.001) or (r <= 0.001):
-            temp = pwm_left
-            pwm_left = pwm_right
-            pwm_right = temp
+        #Both windows have items
+        if(l >= (const + 0.001)) and (r >= (const + 0.001)):
+            self.lost = False
+        elif(self.lost == True or (l < (const + 0.001)) and (r < (const + 0.001))):
+        #No Windows have items
+            pwm_right = 0.2
+            pwm_left = 0.0001
+            self.lost = True
+            
+
 
         return pwm_left, pwm_right
 
