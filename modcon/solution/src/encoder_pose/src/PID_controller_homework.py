@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[56]:
+# In[17]:
 
 
 import numpy as np
@@ -34,19 +34,26 @@ def PIDController(
         e_int_y (:double:) current integral error (automatically becomes prev_int_y at next iteration).
     """
     
-    kp = 2
-    ki = 0.01
-    kd = 4
+    kp = 3.0
+    ki = 0.0001
+    kd = 25
+    
     error = y_ref - y_hat
     e_int = prev_int_y + error * delta_t
+    # anti-windup - preventing the integral error from growing too much
+    e_int = max(min(e_int,2.0),-2.0)
     propTerm = error * kp
     intTerm = e_int * ki
     derivTerm = (error - prev_e_y) / delta_t * kd 
+    
+    
     
     # TODO: these are random values, you have to implement your own PID controller in here
     omega = propTerm + intTerm + derivTerm
     e_y = error
     e_int_y = e_int
+    
+    #print(f"\n\nomega : {omega} \npropTerm : {propTerm} \nintTerm : {intTerm} \nderivTerm : {derivTerm} \ny_hat: {y_hat} \ny_ref: {y_ref}\n")
     
     return [v_0, omega], e_y, e_int_y
 

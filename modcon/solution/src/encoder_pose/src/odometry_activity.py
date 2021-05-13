@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[33]:
+# In[7]:
 
 
 # The function written in this cell will actually be ran on your robot (sim or real). 
@@ -26,7 +26,7 @@ def DeltaPhi(encoder_msg, prev_ticks):
 
     return delta_phi, ticks
 
-# In[35]:
+# In[8]:
 
 
 # The function written in this cell will actually be ran on your robot (sim or real). 
